@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Database\Factories\ReporteFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -20,6 +22,9 @@ use Illuminate\Support\Carbon;
 #[Fillable(['user_id', 'ubicacion', 'descripcion', 'fecha_inicio', 'folio'])]
 class Reporte extends Model
 {
+    /** @use HasFactory<ReporteFactory> */
+    use HasFactory;
+
     /**
      * Get the user that created the reporte.
      *
