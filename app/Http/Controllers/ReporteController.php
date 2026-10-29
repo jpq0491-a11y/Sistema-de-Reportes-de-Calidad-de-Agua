@@ -12,9 +12,11 @@ class ReporteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): View
     {
-        //
+        return view('reportes.listar-reportes')->with([
+            'reportes' => $request->user()->reportes()->with('user')->latest('id')->get(),
+        ]);
     }
 
     /**
@@ -30,45 +32,50 @@ class ReporteController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $reporte = new Reporte;
-        $reporte->user_id = $request->user()->id;
-        $reporte->descripcion = $request->descripcion;
-        $reporte->ubicacion = $request->ubicacion;
-        $reporte->fecha_inicio = $request->fecha_inicio;
-        $reporte->save();
+        $request->user()->reportes()->create(
+            $request->only(['ubicacion', 'descripcion', 'fecha_inicio'])
+        );
 
-        return redirect()->back();
+        return redirect()->route('reporte.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Reporte $reporte)
+    public function show(Reporte $reporte): View
     {
-        //
+        return view('reportes.ver-reporte')->with([
+            'reporte' => $reporte,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Reporte $reporte)
+    public function edit(Reporte $reporte): View
     {
-        //
+        return view('reportes.editar-reporte')->with([
+            'reporte' => $reporte,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reporte $reporte)
+    public function update(Request $request, Reporte $reporte): RedirectResponse
     {
-        //
+        $reporte->update($request->only(['ubicacion', 'descripcion', 'fecha_inicio']));
+
+        return redirect()->route('reporte.show', $reporte);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reporte $reporte)
+    public function destroy(Reporte $reporte): RedirectResponse
     {
-        //
+        $reporte->delete();
+
+        return redirect()->route('reporte.index');
     }
 }
